@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<link href="static/detail.css" rel="stylesheet" type="text/css" media="screen">
+
+<body>
+  <div class="details">
+    <img class="image" src="{{ url_for('static', filename='profile_pics/' + post.author.image) }}">
+
+        <h2>Posted by: {{ post.author.username }}</h2>
+        <small class="text-muted">Posted on: {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        {% if post.author == current_user %}
+          <div>
+            <a class="update-post" href="{{ url_for('update_post', post_id=post.id) }}">Update Post</a>
+
+          </div>
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ post.title }}</h2>
+      <p class="article-content">{{ post.content }}</p>
+
+
+
+        <div class="modal-footer">
+          {% if post.author == current_user %}
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+          {% endif %}
+        </div>
+</body>
+
+{% endblock content %}

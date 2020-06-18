@@ -1,0 +1,125 @@
+.wrapper{
+  display: grid;
+  grid-template-columns: 70% 40%;
+  column-gap:40px;
+
+}
+
+h3{
+  color:white;
+  text-transform: capitalize;
+}
+
+.image{
+  border-radius: 10px;
+}
+
+h4{
+  color:yellow;
+  display: block;
+}
+
+li{
+  list-style: none;
+  position: relative;
+  margin:3.2em 0;
+}
+
+h2.all{
+  margin-left: 7px;
+  font-size: 2em;
+  font-family: cursive;
+  margin-top: 5px;
+
+}
+
+a#sidebar{
+  line-height: 2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: block;
+  transition: all ease-out 300ms;
+  margin-left: 2em;
+  color: white;
+  }
+
+li:hover{
+  background-color:#4c4c4c;
+}
+
+small{
+  color:white;
+}
+
+#tab{
+  margin-top:60px;
+  background-color: #191919;
+
+  border:hidden;
+  box-sizing: border-box;
+  height:500px;
+  width:300px;
+  border-radius: 10px;
+}
+
+a.username{
+  color:#458b74;
+}
+
+.post-body{
+  background-color: #191919;
+  display: grid;
+  grid-template-columns: 5% 80%;
+  margin-left: 70px;
+  margin-top: 20px;
+  border-radius: 10px;
+
+}
+
+.user-prof{
+  padding:10px;
+
+}
+
+.auth{
+  text-decoration: none;
+  margin:5px;
+  box-sizing: border-box;
+  border:1px solid white;
+  padding:2%;
+  border-radius: 4px;
+  margin-left:50px;
+  color:#20b2aa;
+
+}
+
+#author{
+  text-transform: uppercase;
+  color: blue;
+}
+
+.post-title{
+  text-decoration: none;
+  color: blue;
+  text-transform: uppercase;
+  margin-left: 140px;
+}
+
+.post-content{
+  color:white;
+  font-size: 1.3em;
+  margin-left: 120px;
+}
+
+.auth:hover{
+
+  color: 	#b03060;
+}
+
+
+body{
+  background-color:black;
+    background-size: cover;
+    height: 100%;
+
+}

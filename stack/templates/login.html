@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+<link href="static/login.css" rel="stylesheet" type="text/css" media="screen">
+<body>
+  <div class="login">
+    <form method="POST" action="/login">
+
+      {{ form.hidden_tag() }}
+      <h1> LOG IN</h1>
+
+      <div>
+        {{ form.username.label }}
+        {{form.username}}
+      </div>
+        <br>
+        <div>
+        {{ form.password.label }}
+        {{form.password}}
+        </div>
+        <br>
+
+      <div class="form-check">
+        {{ form.remember.label}}
+        {{form.remember}}
+
+      </div><br>
+      <input type="submit" value="Submit">
+        {{form.submit}}
+
+      <div>
+        <br>
+        Need an account? <a id="redirect" href="{{ url_for('register')}}">Sign Up</a>
+      </div>
+      <br>
+        <small>
+          <a href="#">Forgot Password?</a>
+        </small>
+
+    </form>
+  </div>
+
+</body>
+
+{% endblock content %}

@@ -1,0 +1,79 @@
+<!doctype html>
+
+<html>
+<head>
+<title>StackOverflow-lite</title>
+<link href="static/index.css" rel="stylesheet" type="text/css" media="screen">
+<script src="static/index.js"></script>
+</head>
+
+<body>
+
+
+  <nav class="left">
+    <img src="static/stack.png" alt="Logo" width="300px">
+    <h3> Logged in as: {{current_user.username}}</h3>
+
+  </nav>
+
+
+
+  <div class="wrapper">
+    <div id="allquestions">
+
+      <br>
+      <br>
+      {% for post in posts %}
+
+            <div class="post-body">
+              <div class="user-prof">
+                <small>Posted by:</small>
+                <h2 id="author"><a class="username" href="#">{{post.author.username}}</a></h2>
+                <img class="image" src="{{ url_for('static', filename='profile_pics/' + post.author.image) }}">
+              </div>
+              <div class="content">
+                <h2><a class="post-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+                <p class="post-content">{{ post.content }}</p><br>
+                {{post.image}}
+
+              </div>
+            </div>
+            <br>
+            <br>
+      {% endfor %}
+
+    </div>
+
+
+
+
+      {% if current_user.is_authenticated %}
+    <div id="tab">
+        <li><h2 class="tab"><a id="sidebar" href="{{url_for('new_post')}}">Post article</a></h2></li>
+        <li><h2 class="tab"><a id="sidebar" href="{{url_for('account')}}">My Profile</a></h2></li>
+        <li><h2 class="tab"><a id="sidebar" href="#">My posts</a></h2></li>
+        <li><h2 class="tab"><a id="sidebar" href="{{url_for('logout')}}">Logout</a></h2></li>
+        <li><h2 class="tab"><a id="sidebar" href="#">About</a></h2></li>
+    </div>
+    {% else %}
+    <div>
+        <a class="auth" href="{{url_for('register')}}">REGISTER</a>
+        <a class="auth" href="{{url_for('login')}}">LOGIN</a>
+
+    </div>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+  </div>
+
+</body>
+
+
+</html>

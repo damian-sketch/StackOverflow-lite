@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link href="static/ask.css" rel="stylesheet" type="text/css" media="screen">
+<body>
+<div class="ask">
+  <form method="POST" action="" enctype="multipart/form-data">
+    {{form.hidden_tag()}}
+
+    <div>
+      {{form.title.label}}
+      {{form.title}}
+    </div>
+    <br>
+    <div>
+      {{form.content.label}}
+      {{form.content}}
+    </div>
+    <br>
+    <div>
+      {{form.picture.label}}
+      {{form.picture}}
+    </div>
+    <div>
+      {{form.submit}}
+    </div>
+  </form>
+</div>
+</body>
+{%endblock content%}

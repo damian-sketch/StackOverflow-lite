@@ -1,0 +1,26 @@
+#editprofile{
+  margin-left: 70px;
+  margin-top: 20px;
+  background-color: steelblue;
+  padding:30px;
+  box-shadow: 10px 10px 10px 17px;
+
+}
+
+#text{
+  margin-left: 300px;
+}
+
+body{
+  background-color: navy;
+}
+
+h1{
+  margin-left:420px;
+  font-family: Helvetica;
+  color: goldenrod;
+}
+
+h3{
+  font-family: sans-serif;
+}
