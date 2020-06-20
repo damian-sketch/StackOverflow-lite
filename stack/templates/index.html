@@ -11,7 +11,7 @@
 
 
   <nav class="left">
-    <img src="static/stack.png" alt="Logo" width="300px">
+    <img src="static/stack.png" alt="Logo" width="300px"><br>
     <h3> Logged in as: {{current_user.username}}</h3>
 
   </nav>
@@ -34,7 +34,10 @@
               <div class="content">
                 <h2><a class="post-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
                 <p class="post-content">{{ post.content }}</p><br>
-                {{post.image}}
+                {% if post.image %}
+                <img class="post" src="{{ url_for('static', filename='posts/' + post.image) }}" style="width:100%;height:100%;border-radius:5px;">
+                {% endif %}
+
 
               </div>
             </div>

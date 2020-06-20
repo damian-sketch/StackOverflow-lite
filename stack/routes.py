@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, abort
+from flask import render_template, url_for, redirect, request, abort, flash
 from stack import app, db, bcrypt
 from stack.models import User, Post
 from stack.forms import RegistrationForm, LoginForm, AskForm, UpdateAccountForm
@@ -9,6 +9,7 @@ from PIL import Image
 
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 @login_required
 def index():
     posts = Post.query.all()
@@ -17,14 +18,16 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if user.password == form.password.data:
-                login_user(user, remember=form.remember.data)
-                return redirect(url_for('index'))
-
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for('index'))
+        else:
+            flash('Login Unsuccessful! Please try again', 'danger')
     return render_template('login.html', form=form)
 
 
@@ -49,8 +52,9 @@ def logout():
     return redirect(url_for('login'))
 
 
+#save profile pictures
 def save_picture(form_picture):
-    random_hex = secrets.token_hex(8)
+    random_hex = secrets.token_hex(4)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
@@ -66,30 +70,35 @@ def save_picture(form_picture):
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
-    form = UpdateAccountForm()
-    if form.validate_on_submit():
-        if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            current_user.image = picture_file
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        db.session.commit()
-        return redirect(url_for('account'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
+
+    posts = Post.query.filter_by(author=user)
     image_file = url_for('static', filename='profile_pics/' +
                          current_user.image)
+
     return render_template('profile.html', title='Account',
-                           image_file=image_file, form=form)
+                           image_file=image_file, posts=posts)
 
 
 @app.route("/user/<username>", methods=['GET', 'POST'])
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = Post.query.filter_by(post.author == current_user)
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc())
     return render_template('user.html', user=user, posts=posts)
+
+
+def post_img(form_image):
+    random_hex = secrets.token_hex(4)
+    _, f_ext = os.path.splitext(form_image.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/posts', picture_fn)
+
+    output_size = (400, 400)
+    i = Image.open(form_image)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
 
 
 @app.route("/ask", methods=['GET', 'POST'])
@@ -97,10 +106,20 @@ def user(username):
 def new_post():
     form = AskForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('index'))
+        if form.image.data:
+            image = post_img(form.image.data)
+            post = Post(title=form.title.data, content=form.content.data,
+                        image=image, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            flash('Your Post has been created!')
+            return redirect(url_for('index'))
+        else:
+            post = Post(title=form.title.data, content=form.content.data, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            flash('Your post has been created!')
+            return redirect(url_for('index'))
     return render_template('post_questions.html', title='New Post',
                            form=form, legend='New Post')
 

@@ -15,3 +15,8 @@ a#redirect{
 body{
   background-color:  #191919;
 }
+
+.danger{
+        padding: 8px;
+
+        color: red;

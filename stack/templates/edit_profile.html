@@ -1,37 +1,41 @@
-<!doctype>
+{%extends "layout.html"%}
+{% block content %}
+<div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Account Info</legend>
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }}
 
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control form-control-lg is-invalid") }}
 
-<html>
-<head>
-  <title>Edit Profile</title>
-<link href="css/edit.css" rel="stylesheet" type="text/css">
-<script src="edit_profile.js"></script>
-</head>
+                {% else %}
+                    {{ form.username(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-control-label") }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.picture.label() }}
+                {{ form.picture(class="form-control-file") }}
 
-<body>
-
-<h1> Edit Your Personal Information </h1>
-  <div id="editprofile">
-    <div id="text">
-    <h3>Profile Photo:</h3><input type="text" name="profilephoto"
-    placeholder="Upload Image " style="height:180px;" size="17"><br>
-    <input type="button" name="uploadfile" action="" value="Upload file">
-    <br>
-    <h3>Username:</h3><input type="text" name="editusername" placeholder="Enter username here">
-    <br>
-    <h3>Bio:</h3><input type="text" name="editbio"
-    size="50" style="height:180px; placeholder="Enter short description of yourself here">
-    <br>
-    <h3>Top Interests:</h3><input type="text" name="edittopinterests"
-    placeholder="Add 3 or 4 topics you are interested in" size="90" style="height:180px;">
-    <br><br>
-    <button type="submit"  onclick="editprof();"  name="confirmchanges" value="CONFIRM">CONFIRM </button>
-    </div>
-  </div>
-
-
-
-
-</body>
-
-</html>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>

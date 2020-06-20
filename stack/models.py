@@ -4,19 +4,23 @@ from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
-
+    __tablename__ = 'user'
+    __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image = db.Column(db.String(20), nullable=False, default='default.jpeg')
     password = db.Column(db.String(80), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image}')"
 
 
 class Post(db.Model):
+    __tablename__ = 'post'
+    __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -26,6 +30,16 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"{self.title}"
+
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(140))
+    author = db.Column(db.String(32))
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 @login_manager.user_loader

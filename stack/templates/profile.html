@@ -1,51 +1,34 @@
 {% extends "layout.html" %}
+
+
 {% block content %}
-    <div class="content-section">
-      <div class="media">
-        <img class="prof-image" src="{{image_file}}">
-        <div class="media-body">
-          <h2 class="account-heading">{{ current_user.username }}</h2>
-          <p class="text-secondary">{{ current_user.email }}</p>
-        </div>
-      </div>
-        <form method="POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Account Info</legend>
-                <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
-
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control form-control-lg is-invalid") }}
-
-                    {% else %}
-                        {{ form.username(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.picture.label() }}
-                    {{ form.picture(class="form-control-file") }}
-                    
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
-        </form>
-        <br>
-        <a class="home" href="{{ url_for('index') }}">Home</a>
+<link href="static/profile.css" rel="stylesheet" type="text/css" media="screen">
+<body>
+  <div class="wrapper">
+    <div id="profile">
+          <a class="home" href="{{ url_for('index') }}">Home</a><br>
+      <h1> Profile Details</h1>
+      <br>
+        <img class="prof-image" src="{{image_file}}"><br>
+          <h2 class="account-heading">Username: {{ current_user.username }}</h2><br>
+          <h3 class="text-secondary">Email: {{ current_user.email }}</h3><br>
+          <! Dummy data !>
+          <h3> Posts: 2</h3><br>
+          <h3> Followers: 32</h3><br>
+          <h3> Following: 29</h3>
     </div>
+
+    <div id="posts">
+      <h1>My Posts:</h1>
+
+      {% for post in posts %}
+      <p>
+      {{post.content}}
+      </p>
+      {% endfor %}
+
+
+    </div>
+  </div>
+</body>
 {% endblock content %}

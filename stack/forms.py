@@ -47,7 +47,7 @@ class AskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=1,
                         max=50)])
     content = TextAreaField('Content', validators=[DataRequired()])
-    picture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     submit = SubmitField('Post')
 
 
