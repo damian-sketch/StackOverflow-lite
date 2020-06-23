@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(20), nullable=False, default='default.jpeg')
     password = db.Column(db.String(80), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
-    comments = db.relationship('Comment', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='commenter', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image}')"
@@ -27,6 +27,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     image = db.Column(db.String(20))
+    comments = db.relationship('Comment', backref='post', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"{self.title}"
@@ -37,10 +38,12 @@ class Comment(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(140))
-    author = db.Column(db.String(32))
-    timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
 
+    def __repr__(self):
+        return f"{self.text}"
 
 @login_manager.user_loader
 def load_user(user_id):

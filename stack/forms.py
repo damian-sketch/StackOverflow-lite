@@ -44,7 +44,7 @@ class LoginForm(FlaskForm):
 
 
 class AskForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(min=1,
+    title = StringField('Title', validators=[DataRequired(), Length(min=5,
                         max=50)])
     content = TextAreaField('Content', validators=[DataRequired()])
     image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
@@ -70,3 +70,8 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
+
+
+class CommentForm(FlaskForm):
+    content = StringField('Comment', validators=[Length(min=1), DataRequired()])
+    submit = SubmitField('Post')

@@ -19,6 +19,8 @@
       </div>
       <h2 class="article-title">{{ post.title }}</h2>
       <p class="article-content">{{ post.content }}</p>
+      <hr>
+
 
 
 
@@ -28,6 +30,16 @@
             <input class="btn btn-danger" type="submit" value="Delete">
           </form>
           {% endif %}
+        </div>
+
+        <div class="comment">
+            <form method="POST" action="" enctype="multipart/form-data">
+              {{  form.hidden_tag() }}
+              <br>
+              {{ form.content.label }}
+              {{ form.content }}
+              <br>
+              {{ form.submit }}
         </div>
 </body>
 
