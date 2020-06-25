@@ -1,0 +1,34 @@
+.error{
+  margin-left: 200px;
+  margin-top: 60px;
+  background-color: white;
+  height:180px;
+  padding:2%;
+  border-radius: 10px;
+
+
+}
+
+a{
+  text-decoration: none;
+  color:blue;
+  font-size: 1.2em;
+
+}
+
+.logo{
+  margin-top:20px;
+}
+body{
+  background-color: white;
+}
+@font-face{
+  font-family: Rubik;
+  src: url('Rubik-Black.ttf');
+
+}
+h1{
+  color:black;
+  font-family: Rubik;
+
+}
