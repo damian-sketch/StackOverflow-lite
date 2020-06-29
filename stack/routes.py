@@ -6,6 +6,9 @@ from flask_login import login_user, current_user, logout_user, LoginManager, Use
 import os
 import secrets
 from PIL import Image
+from itsdangerous import URLSafeTimedSerializer
+from sqlalchemy.exc import IntegrityError
+import datetime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -27,23 +30,66 @@ def login():
             login_user(user, remember=form.remember.data)
             return redirect(url_for('index'))
         else:
-            flash('Login Unsuccessful! Please try again', 'danger')
+            flash('Incorrect username/password!', 'danger')
     return render_template('login.html', form=form)
+
+
+def send_confirmation_email(email):
+    confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+    confirm_url = url_for('confirm_email', token=confirm_serializer.dumps(email,
+                          salt='email-confirmation-salt'),
+                          _external=True)
+
+    html = render_template('activate.html', confirm_url=confirm_url)
+
+    send_email('Confirm Your Email Address', [email], html)
+
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        confirm_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = confirm_serializer.loads(token, salt='email-confirmation-salt',
+                                         max_age=3600)
+    except:
+        flash('The comfirmation link is invalid or expired', 'error')
+        return redirect(url_for('login'))
+
+        user = User.query.filter_by(email=email).first()
+
+        if user.confirmed:
+            flash('Account already confirmed.Please login')
+        else:
+            user.confirmed = True
+            user.confirmed_on = datetime.now()
+            db.session.add(user)
+            db.session.commit()
+            flash('Thank you for confirming your email')
+
+        return redirect(url_for('index'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(username=form.username.data, email=form.email.data,
-                        password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('index'))
-    return render_template('signup.html', form=form)
+        try:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            new_user = User(username=form.username.data, email=form.email.data,
+                            password=hashed_password, confirmed=False)
+            db.session.add(new_user)
+            db.session.commit()
 
+            login_user(new_user)
+            return redirect(url_for('index'))
+
+
+        except IntegrityError:
+            db.session.rollback()
+            flash('ERROR!Email already exists!')
+
+    return render_template('signup.html', form=form)
 
 @app.route('/logout')
 @login_required

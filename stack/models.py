@@ -13,9 +13,14 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='commenter', lazy='dynamic', cascade='all, delete-orphan')
+    confirmed = db.Column(db.Boolean, default=False),
+    confirmed_on = db.Column(db.DateTime),
+    sent_on = db.Column(db.DateTime)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image}')"
+
+
 
 
 class Post(db.Model):
